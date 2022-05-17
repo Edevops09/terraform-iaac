@@ -24,9 +24,9 @@ resource "docker_container" "nodered_container" {
   }
 }
 
-output "Docker_IP_Address" {
-  value = docker_container.nodered_container.ip_address
-  description = "The Ip Address of the Docker container"
+output "IP-Address" {
+  value       = join(":", [docker_container.nodered_container.ip_address, docker_container.nodered_container.ports[0].external])
+  description = "The IP address and external port of the container"
 }
 
 output "Docker_id" {
