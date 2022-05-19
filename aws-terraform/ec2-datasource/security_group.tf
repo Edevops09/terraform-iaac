@@ -1,13 +1,27 @@
 # Create Security Group to Allow SSH Traffic
+
+variable "ec2_ingress_ports_default" {
+  description = "Allowed Ec2 ports"
+  type        = map
+  default = {
+    "22"  = ["192.168.1.0/24", "0.0.0.0/0"]
+    "443" = ["0.0.0.0/0"]
+    "80"  = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_security_group" "vpc-ssh" {
   name        = "vpc-ssh"
   description = "Dev VPC SSH"
-  ingress {
-    description = "Allow Port 22"
-    from_port   = 22
-    to_port     = 22
+  dynamic ingress {
+    for_each = var.ec2_ingress_ports_default
+    content {
+    description = "Allow Port 22, 80, 443"
+    from_port   = ingress.key
+    to_port     = ingress.key
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ingress.value
+    }
   }
 
   egress {
@@ -52,4 +66,9 @@ resource "aws_security_group" "vpc-web" {
   tags = {
     Name = "vpc-web"
   }
+}
+
+output "sg_ports" {
+  description = "Secuirity group Id of ec2 instance"
+  value = aws_security_group.vpc-ssh.id
 }
