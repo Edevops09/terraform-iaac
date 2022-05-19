@@ -1,5 +1,5 @@
 resource "aws_security_group" "sg-test" {
-  name        = "sg-test"
+  name        = "sg_test"
   description = "Allow inbound traffic"
 
   ingress {
