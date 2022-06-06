@@ -8,6 +8,7 @@ resource "aws_autoscaling_group" "example" {
   min_size = var.min_size
   max_size = var.max_size
 
+
   # Use instance refresh to roll out changes to the ASG
   instance_refresh {
     strategy = "Rolling"
